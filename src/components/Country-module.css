@@ -1,0 +1,15 @@
+
+.country-card{
+    background-color: rgb(54, 68, 82);
+    padding: 24px 10px 16px 48px;
+    color: white;
+    border-radius: 16px;  
+    transition: all 0.3s;
+}
+.country-card:hover{
+    transform: scale(1.1);
+}
+.country-img{
+    width: 12rem;
+    height: 7rem;
+}

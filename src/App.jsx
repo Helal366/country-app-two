@@ -1,35 +1,61 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { useEffect, useState } from "react";
+import "./App.css";
+import Countries from "./components/Countries";
+import Search from "./components/Search";
 
+const url = "https://restcountries.com/v3.1/all";
 function App() {
-  const [count, setCount] = useState(0)
+  const [countries, setCountries] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [filteredCountries, setFilteredCountries] = useState(countries);
 
+  const fetchData = async (url) => {
+    setIsLoading(true);
+    try {
+      const response = await fetch(url);
+      const data = await response.json();
+      setCountries(data);
+      setFilteredCountries(data);
+      setIsLoading(false);
+      setError(null);
+    } catch (error) {
+      setIsLoading(false);
+      setError(error);
+    }
+  };
+  useEffect(() => {
+    fetchData(url);
+  }, []);
+
+  const handleRemoveCountry = (name) => {
+    const filter = filteredCountries.filter(
+      (country) => country.name.common !== name
+    );
+    setFilteredCountries(filter);
+  };
+  const handleSearch = (text) => {
+    const searchText = text.toLowerCase();
+    const searchCountries = filteredCountries.filter((country) => {
+      const name = country.name.common.toLowerCase();
+      return name.startsWith(searchText);
+    });
+    setFilteredCountries(searchCountries);
+  };
+  const loadingMessage = <p>Loading...</p>;
+  const errorMessage = <p>{error && error.message}</p>;
   return (
     <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
+      <h1>Country App Revision </h1>
+      <Search handleSearch={handleSearch}></Search>
+      {isLoading && loadingMessage}
+      {error && errorMessage}
+      <Countries
+        countries={filteredCountries}
+        handleRemoveCountry={handleRemoveCountry}
+      ></Countries>
     </>
-  )
+  );
 }
 
-export default App
+export default App;

@@ -1,0 +1,15 @@
+.search-div{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 4rem auto;
+}
+.search-div input{
+    padding: 10px 16px;
+    border-radius: 8px; 
+    border: 1px solid purple;  
+    font-size: 1rem;
+}
+.search-div input:focus{
+    outline: none;
+}
